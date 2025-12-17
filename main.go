@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -71,7 +72,12 @@ func RedirectHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	http.Redirect(w, r, urlShortnerInstance.url, http.StatusSeeOther)
+	redirectURL := urlShortnerInstance.url
+	if !strings.HasPrefix(redirectURL, "http://") && !strings.HasPrefix(redirectURL, "https://") {
+		redirectURL = "https://" + redirectURL
+	}
+
+	http.Redirect(w, r, redirectURL, http.StatusSeeOther)
 
 }
 
